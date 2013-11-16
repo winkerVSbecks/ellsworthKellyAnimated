@@ -1,0 +1,15 @@
+{
+  "name": "two",
+  "homepage": "https://github.com/jonobr1/two.js",
+  "version": "0.3.0",
+  "_release": "0.3.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.3.0",
+    "commit": "6dcbd80f908074e2158acd5351894dd085cd0df4"
+  },
+  "_source": "git://github.com/jonobr1/two.js.git",
+  "_target": "~0.3.0",
+  "_originalSource": "two",
+  "_direct": true
+}
