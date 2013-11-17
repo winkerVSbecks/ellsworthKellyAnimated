@@ -19,7 +19,9 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef,
   b2DistanceJointDef =  Box2D.Dynamics.Joints.b2DistanceJointDef;
 
-var tri, curve, c, ctx;
+var c, ctx, 
+    activeWork = 0,
+    works = [];
 
 
 // Init the box2d world
@@ -41,27 +43,56 @@ $(function () {
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
 
-  var w = 640;
-  
-  tri = new SpringyTriangle(
-    new b2Vec2( w/4, 200 ),
-    new b2Vec2( w/2, 60 ),
-    new b2Vec2( 3*w/4, 200 ),
-    '#F4513F',
-    new b2Vec2(0, 50*scale), 
-    1);
+  var w = 640,
+      h = 480;
 
-  curve = new SpringyTriangle(
-    new b2Vec2( w/4, 470 ),
-    new b2Vec2( w/4, 114 ),
-    new b2Vec2( w/4+356, 114 ),
-    '#2D2A22',
-    new b2Vec2(50*scale, 50*scale),
-    4 );
+  works.push( 
+    new SpringyTriangle(
+      new b2Vec2( w/4, 200 ),
+      new b2Vec2( w/2, 60 ),
+      new b2Vec2( 3*w/4, 200 ),
+      '#F4513F',
+      new b2Vec2(0, 50*scale), 
+      1,
+      '#ffffff',
+      w, h ));
+
+  works.push( 
+    new SpringyTriangle(
+      new b2Vec2( 0, 356 ),
+      new b2Vec2( 0, 0 ),
+      new b2Vec2( 356, 0 ),
+      '#2D2A22',
+      new b2Vec2(50*scale, 50*scale),
+      4,
+      '#F7F3EB',
+      356, 356 ));
+
+  works.push( 
+    new SpringyTriangle(
+      new b2Vec2( 0, 0 ),
+      new b2Vec2( 355.3, 0 ),
+      new b2Vec2( 355.3, h ),
+      '#BB1523',
+      new b2Vec2(50*scale, 50*scale),
+      0.85,
+      '#ffffff',
+      355.3, h ));
+
+  works.push( 
+    new SpringyTriangle(
+      new b2Vec2( 45, 434-45 ),
+      new b2Vec2( 45+265, 434-45 ),
+      new b2Vec2( 45+265, 434-336-45 ),
+      '#222222',
+      new b2Vec2(150*scale, 150*scale),
+      1,
+      '#DFDFDB',
+      606, 434 ));
 
   console.log(Box2D);
 
-}); 
+});
 
 
 // ***********************************************************
@@ -98,14 +129,33 @@ function update() {
   // Clear canvas
   ctx.clearRect(0, 0, 640, 480);
   // Update triangles
-  tri.update();
-  curve.update();
+  works[activeWork].update();
 }
 
 function impulse () {
-  tri.impulse();
-  curve.impulse();
+  works[activeWork].impulse();
 }
+
+
+
+// ***********************************************************
+//  Navigation
+// ***********************************************************
+$( '#next' ).click(function() {
+  if(activeWork < works.length-1) activeWork++;
+  $('#canvas').css({backgroundColor: works[activeWork].bg});
+  // Resize canvas
+  ctx.canvas.height = works[activeWork].h;
+  ctx.canvas.width = works[activeWork].w;
+});
+
+$( '#prev' ).click(function() {
+  if(activeWork > 0) activeWork--;
+  $('#canvas').css({backgroundColor: works[activeWork].bg});
+  // Resize canvas
+  ctx.canvas.height = works[activeWork].h;
+  ctx.canvas.width = works[activeWork].w;
+});
 
 
 

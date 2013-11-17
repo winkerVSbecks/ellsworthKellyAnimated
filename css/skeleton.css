@@ -16,9 +16,13 @@
     #Mobile (Landscape)
     #Clearing */
 
-    .canvas {
+    .centre {
         margin-top: 100px;
         text-align: center;
+    }
+
+    .btn {
+        width: 100px;
     }
 
 

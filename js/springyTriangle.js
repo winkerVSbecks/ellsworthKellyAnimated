@@ -1,7 +1,7 @@
 // springyTriangle
 
 //Define a functional object to hold persons in javascript
-var SpringyTriangle = function(p_start, p_mid, p_end, col, force, curve) {
+var SpringyTriangle = function(p_start, p_mid, p_end, col, force, curve, bg, w, h) {
 
 	// Particle positions
 	this.p_start = p_start;
@@ -15,6 +15,9 @@ var SpringyTriangle = function(p_start, p_mid, p_end, col, force, curve) {
 
 	this.force = force;
 	this.col = col;  
+	this.bg = bg;
+	this.w = w;
+	this.h = h;
 
 	// Build Particles
 	this.a_mid = new Particle( this.p_mid.x, this.p_mid.y, true );
@@ -103,7 +106,6 @@ SpringyTriangle.prototype.update = function () {
 	// this.a_start.update();
 	// this.a_end.update();
 
-	// ctx.clearRect(0, 0, 640, 480);
 	ctx.fillStyle = this.col;
 
 	ctx.beginPath();
@@ -122,5 +124,7 @@ SpringyTriangle.prototype.update = function () {
   ctx.moveTo(this.a_imp.getPosition().x*scale, this.a_imp.getPosition().y*scale);
 
   ctx.fill();
+
+  ctx.fillStyle = '#ff0000';
 
 };
