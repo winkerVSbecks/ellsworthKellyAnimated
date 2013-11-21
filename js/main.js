@@ -21,7 +21,10 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
 
 var c, ctx, 
     activeWork = 0,
-    works = [];
+    works = [],
+    sMouseX,
+    sMouseY;
+
 
 
 // Init the box2d world
@@ -45,6 +48,24 @@ $(function () {
 
   var w = 640,
       h = 480;
+
+  var curvePoints = [];
+
+  for (var i = 0; i < 6; i++) {
+    curvePoints.push(
+      new b2Vec2( 
+        w/2 - w/2 * Math.cos(Math.PI*i/5), 
+        h - w/2 * Math.sin(Math.PI*i/5)
+      ));
+  };
+
+  works.push(
+    new Curve(
+      curvePoints,
+      new b2Vec2( w/2, h ),
+      '#F4513F',
+      '#ffffff',
+      w, h ));
 
   works.push( 
     new SpringyTriangle(
@@ -92,6 +113,15 @@ $(function () {
 
   console.log(Box2D);
 
+  //setup debug draw
+  var debugDraw = new b2DebugDraw();
+  debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+  debugDraw.SetDrawScale(scale);
+  debugDraw.SetFillAlpha(0.5);
+  debugDraw.SetLineThickness(1.0);
+  debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+  world.SetDebugDraw(debugDraw);
+
 });
 
 
@@ -124,7 +154,7 @@ function update() {
   }
 
   world.Step(1 / 60, 10, 10);
-  // world.DrawDebugData();
+  world.DrawDebugData();
   world.ClearForces();
   // Clear canvas
   ctx.clearRect(0, 0, 640, 480);
@@ -134,6 +164,16 @@ function update() {
 
 function impulse () {
   works[activeWork].impulse();
+}
+
+function moveImp () {
+  var deltaX = sMouseX - mouseX;
+  // var deltaY = sMouseY - mouseY;
+
+  var pos = works[activeWork].a_imp.body.GetPosition();
+  works[activeWork].a_imp.body.SetPosition(
+    new b2Vec2( pos.x-deltaX / scale, 
+                pos.y-deltaY / scale ));
 }
 
 
@@ -163,7 +203,7 @@ $( '#prev' ).click(function() {
 //  Mouse Events and Selecting Bodies, Forces, etc
 // ***********************************************************
 var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
-var canvasPosition = getElementPosition(document.getElementById('canvas').children[0]);
+var canvasPosition = getElementPosition(document.getElementById('canvas'));
 
 document.addEventListener("mousedown", function(e) {
   isMouseDown = true;
@@ -171,6 +211,10 @@ document.addEventListener("mousedown", function(e) {
   impulse();
 
   handleMouseMove(e);
+
+  sMouseX = mouseX;
+  sMouseY = mouseY;
+
   document.addEventListener("mousemove", handleMouseMove, true);
 }, true);
 
