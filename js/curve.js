@@ -74,7 +74,9 @@ Curve.prototype.impulse = function () {
     var pinger = 1;
     if (ping > 0) pinger = 1;
     if (ping <= 0) pinger = -1;
-    var appliedForce = new b2Vec2(Math.random(50)*scale*pinger, Math.random(50)*scale*pinger );
+    var theta = Math.PI*(this.p.length-1-i)/(this.p.length-1);
+    var f = Math.random(300, 450);
+    var appliedForce = new b2Vec2(-f*scale*pinger*Math.cos(theta), -f*scale*pinger*Math.sin(theta) );
     this.imp = this.p[i].getPosition();
     this.p[i].body.ApplyImpulse(appliedForce, this.imp);
   }
@@ -85,7 +87,6 @@ Curve.prototype.impulse = function () {
 Curve.prototype.update = function () {
 	
 	ctx.fillStyle = this.col;
-
 	ctx.beginPath();
 
 	ctx.moveTo(this.p[0].getPosition().x*scale, this.p[0].getPosition().y*scale);
@@ -99,17 +100,6 @@ Curve.prototype.update = function () {
 	ctx.quadraticCurveTo(this.p[i].getPosition().x*scale, this.p[i].getPosition().y*scale, this.p[i+1].getPosition().x*scale,this.p[i+1].getPosition().y*scale);
 
   ctx.fill();
-
   ctx.fillStyle = '#ff0000';
-
- 	// ctx.beginPath();
- 	// ctx.moveTo(this.p[0].getPosition().x*scale, this.p[0].getPosition().y*scale);
- 	// // ctx.arc(this.p[0].getPosition().x * scale, this.p[0].getPosition().y * scale, 5, 0, 2 * Math.PI, false);
- 	// // ctx.arc(this.p[this.p.length-1].getPosition().x * scale, this.p[this.p.length-1].getPosition().y * scale, 5, 0, 2 * Math.PI, false);
-  // for (i = 0; i < this.p.length; i++) {
-  // 	ctx.arc(this.p[i].getPosition().x * scale, this.p[i].getPosition().y * scale, 5, 0, 2 * Math.PI, false);
-  // }
-  // ctx.fillStyle = '#000000';
-  // ctx.fill();
 
 };
