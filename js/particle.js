@@ -1,6 +1,5 @@
 var Particle = function(x, y, fixed) {
 	
-	// We need to keep track of a Body and a radius
 	this.r = 20 / scale;
 	this.x = x / scale;
 	this.y = y / scale;

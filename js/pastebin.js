@@ -45,3 +45,18 @@
 	this.triangle.linewidth = 0;
 
 		console.log(this.triangle.vertices[3]);
+
+
+
+		      w, h ));
+
+  // works.push( 
+  //   new SpringyTriangle(
+  //     new b2Vec2( w/4, 200 ),
+  //     new b2Vec2( w/2, 60 ),
+  //     new b2Vec2( 3*w/4, 200 ),
+  //     '#F4513F',
+  //     new b2Vec2(0, 50*scale), 
+  //     1,
+  //     '#ffffff',
+  //     w, h ));

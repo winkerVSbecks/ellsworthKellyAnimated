@@ -46,16 +46,21 @@ $(function () {
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
 
+  // Shifty Polygon
+  buildShiftyPolygon();
+
+
   var w = 640,
       h = 480;
 
+  // Orange Curve
   var curvePoints = [];
 
   for (var i = 0; i < 6; i++) {
     curvePoints.push(
       new b2Vec2( 
         w/2 - w/2 * Math.cos(Math.PI*i/5), 
-        h - w/2 * Math.sin(Math.PI*i/5)
+        h - 0.85*h * Math.sin(Math.PI*i/5)
       ));
   };
 
@@ -64,20 +69,11 @@ $(function () {
       curvePoints,
       new b2Vec2( w/2, h ),
       '#F4513F',
-      '#ffffff',
+      '#F5F8FE',
       w, h ));
 
-  works.push( 
-    new SpringyTriangle(
-      new b2Vec2( w/4, 200 ),
-      new b2Vec2( w/2, 60 ),
-      new b2Vec2( 3*w/4, 200 ),
-      '#F4513F',
-      new b2Vec2(0, 50*scale), 
-      1,
-      '#ffffff',
-      w, h ));
-
+  
+  // Triangles and Triangle Curves
   works.push( 
     new SpringyTriangle(
       new b2Vec2( 0, 356 ),
@@ -113,14 +109,20 @@ $(function () {
 
   console.log(Box2D);
 
+  // Apply BG color to canvas
+  $('#canvas').css({backgroundColor: works[activeWork].bg});
+  // Resize canvas
+  ctx.canvas.height = works[activeWork].h;
+  ctx.canvas.width = works[activeWork].w;
+
   //setup debug draw
-  var debugDraw = new b2DebugDraw();
-  debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
-  debugDraw.SetDrawScale(scale);
-  debugDraw.SetFillAlpha(0.5);
-  debugDraw.SetLineThickness(1.0);
-  debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-  world.SetDebugDraw(debugDraw);
+  // var debugDraw = new b2DebugDraw();
+  // debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+  // debugDraw.SetDrawScale(scale);
+  // debugDraw.SetFillAlpha(0.5);
+  // debugDraw.SetLineThickness(1.0);
+  // debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+  // world.SetDebugDraw(debugDraw);
 
 });
 
@@ -283,4 +285,44 @@ function getElementPosition(element) {
 function dist (x1, y1, x2, y2) {
   d = Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
   return d;
+}
+
+
+// ***********************************************************
+//  BUILD WORKS
+// ***********************************************************         
+function  buildShiftyPolygon () {
+
+  var w = 424,
+      h = 440;
+  
+  var nodes = [];
+
+  nodes.push(
+    new Node(
+      new b2Vec2(0,0),
+      [0,w],
+      true ));
+  nodes.push(
+    new Node(
+      new b2Vec2(w,0),
+      [0,h],
+      false ));
+  nodes.push(
+    new Node(
+      new b2Vec2(0.66*w,h),
+      [0, w],
+      true ));
+  nodes.push(
+    new Node(
+      new b2Vec2(0,0.484*h),
+      [0, h],
+      false ));
+
+  works.push(
+    new Polygon(
+      nodes,
+      '#2E2C2D',
+      '#F8F9FB',
+      424, 440 ));
 }
