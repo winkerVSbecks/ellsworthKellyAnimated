@@ -17,23 +17,32 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
   b2DebugDraw = Box2D.Dynamics.b2DebugDraw,
   b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef,
-  b2DistanceJointDef =  Box2D.Dynamics.Joints.b2DistanceJointDef;
+  b2DistanceJointDef =  Box2D.Dynamics.Joints.b2DistanceJointDef,
+  b2PrismaticJointDef =  Box2D.Dynamics.Joints.b2PrismaticJointDef;
 
 var c, ctx, 
     activeWork = 0,
     works = [],
     sMouseX,
     sMouseY;
+var drawDebug = false;
 
 
 
 // Init the box2d world
-var world = new b2World(
-  //gravity
-  new b2Vec2(0, 20/scale),
-  //allow sleep   
-  true                       
-);
+// var world = new b2World(
+//   //gravity
+//   new b2Vec2(0, 20/scale),
+//   //allow sleep   
+//   true                       
+// );
+// Create individual worlds for each artwork
+var worlds = [];
+for (var i = 0; i < 6; i++) {
+  worlds.push(
+    new b2World(new b2Vec2(0, 20/scale), true));
+};
+var world = worlds[0];
  
 window.setInterval(update, 1000 / 60);
 
@@ -46,9 +55,11 @@ $(function () {
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
 
+  // Red Blue
+  buildRedBlue();
+
   // Shifty Polygon
   buildShiftyPolygon();
-
 
   var w = 640,
       h = 480;
@@ -64,6 +75,7 @@ $(function () {
       ));
   };
 
+  world = worlds[2];
   works.push(
     new Curve(
       curvePoints,
@@ -74,6 +86,7 @@ $(function () {
 
   
   // Triangles and Triangle Curves
+  world = worlds[3];
   works.push( 
     new SpringyTriangle(
       new b2Vec2( 0, 356 ),
@@ -85,6 +98,7 @@ $(function () {
       '#F7F3EB',
       356, 356 ));
 
+  world = worlds[4];
   works.push( 
     new SpringyTriangle(
       new b2Vec2( 0, 0 ),
@@ -96,6 +110,7 @@ $(function () {
       '#ffffff',
       355.3, h ));
 
+  world = worlds[5];
   works.push( 
     new SpringyTriangle(
       new b2Vec2( 45, 434-45 ),
@@ -114,15 +129,19 @@ $(function () {
   // Resize canvas
   ctx.canvas.height = works[activeWork].h;
   ctx.canvas.width = works[activeWork].w;
+  // Set to world 1
+  world = worlds[0];
 
   //setup debug draw
-  // var debugDraw = new b2DebugDraw();
-  // debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
-  // debugDraw.SetDrawScale(scale);
-  // debugDraw.SetFillAlpha(0.5);
-  // debugDraw.SetLineThickness(1.0);
-  // debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-  // world.SetDebugDraw(debugDraw);
+  var debugDraw = new b2DebugDraw();
+  debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+  debugDraw.SetDrawScale(scale);
+  debugDraw.SetFillAlpha(0.5);
+  debugDraw.SetLineThickness(1.0);
+  debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+  for (var i = worlds.length - 1; i >= 0; i--) {
+    worlds[i].SetDebugDraw(debugDraw);
+  };
 
 });
 
@@ -156,12 +175,14 @@ function update() {
   }
 
   world.Step(1 / 60, 10, 10);
-  world.DrawDebugData();
   world.ClearForces();
   // Clear canvas
-  ctx.clearRect(0, 0, 640, 480);
+  ctx.clearRect(0, 0, 640, 640);
   // Update triangles
   works[activeWork].update();
+  // Draw debug view 
+  if(drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork])) world.DrawDebugData();
+
 }
 
 function impulse () {
@@ -189,6 +210,7 @@ $( '#next' ).click(function() {
   // Resize canvas
   ctx.canvas.height = works[activeWork].h;
   ctx.canvas.width = works[activeWork].w;
+  world = worlds[activeWork];
 });
 
 $( '#prev' ).click(function() {
@@ -197,8 +219,8 @@ $( '#prev' ).click(function() {
   // Resize canvas
   ctx.canvas.height = works[activeWork].h;
   ctx.canvas.width = works[activeWork].w;
+  world = worlds[activeWork];
 });
-
 
 
 // ***********************************************************
@@ -287,14 +309,23 @@ function dist (x1, y1, x2, y2) {
   return d;
 }
 
+// Toggle debug mode
+$(window).keypress( function (e) {
+  if(e.keyCode === 100) {
+    drawDebug = !drawDebug;
+  }
+});
+
 
 // ***********************************************************
 //  BUILD WORKS
 // ***********************************************************         
-function  buildShiftyPolygon () {
+function buildShiftyPolygon () {
 
   var w = 424,
       h = 440;
+
+  world = worlds[1];
   
   var nodes = [];
 
@@ -326,3 +357,27 @@ function  buildShiftyPolygon () {
       '#F8F9FB',
       424, 440 ));
 }
+
+function buildRedBlue () {
+
+  var locs = [];
+  world = worlds[0];
+
+  locs.push(
+    new b2Vec2( 66,38 ));
+  locs.push(
+    new b2Vec2( 66+508,38 ));
+  locs.push(
+    new b2Vec2( 66+508,156+38 ));
+  locs.push(
+    new b2Vec2( 66,156+ 38));
+
+  works.push(
+    new JellyQuad(
+      locs,
+      '#F35452',
+      '#F0F0EE',
+      640, 640 ));
+}
+
+// blue #0196CE

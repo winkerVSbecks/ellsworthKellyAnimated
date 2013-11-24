@@ -75,7 +75,7 @@ Curve.prototype.impulse = function () {
     if (ping > 0) pinger = 1;
     if (ping <= 0) pinger = -1;
     var theta = Math.PI*(this.p.length-1-i)/(this.p.length-1);
-    var f = Math.random(300, 450);
+    var f = Math.random();
     var appliedForce = new b2Vec2(-f*scale*pinger*Math.cos(theta), -f*scale*pinger*Math.sin(theta) );
     this.imp = this.p[i].getPosition();
     this.p[i].body.ApplyImpulse(appliedForce, this.imp);
