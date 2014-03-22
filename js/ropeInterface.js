@@ -1,88 +1,81 @@
-var RopeInterface = function(locs, col, bg, w, h) {
+// ***********************************************************
+//  Based on the work of Silver Moon
+//  http://www.binarytides.com/make-rope-box2d-javascript/
+// ***********************************************************
 
-  // Particles
-  this.locs = locs;
-  // TL TR BR BL =  0 1 2 3
+var RopeInterface = function(rHeight, bg, w, h) {
 
-  this.col = col;
   this.bg = bg;
   this.w = w;
   this.h = h;
+  this.p = [];
 
-  var ground, ceiling;
+  this.ceiling = createBox(this.w * 0.5, -10, this.w, 10, b2Body.b2_staticBody);
+  var lastLink = this.ceiling;    
+  var lastAnchorPoint = new b2Vec2(0, -10 / scale);    
+  var revoluteJoint = new b2RevoluteJointDef;                          
 
-  ground = ceiling = createBox(world, this.w / 2, this.h - 0.5, 16, 1, {
-    type: b2Body.b2_staticBody
-  });         
-  var last_link = ceiling;    
-  var last_anchor_point = new b2Vec2(0, -0.5);    
-  var revolute_joint = new b2RevoluteJointDef();             
-  var r_height = 1.1;             
-  for (var i = 1; i <= 10; i++)     {        
-    var body = createBox(world, this.w / 2, this.h - 1 - i * 1.5, 0.25, r_height);                         
-    revolute_joint.bodyA = last_link;        
-    revolute_joint.bodyB = body;        
-    revolute_joint.localAnchorA = last_anchor_point;        
-    revolute_joint.localAnchorB = new b2Vec2(0, r_height / 2);                 
-    last_anchor_point = new b2Vec2(0, -1 * r_height / 2);                         
-    world.CreateJoint(revolute_joint);                         
-    last_link = body;    
-  }         
-  var body = createBox(world, this.w / 2, this.h - 1 - i * 1.5, r_height, r_height, {
-    density: 5.0
-  });                 
-  revolute_joint.bodyA = last_link;    
-  revolute_joint.bodyB = body;    
-  revolute_joint.localAnchorA = last_anchor_point;    
-  revolute_joint.localAnchorB = new b2Vec2(0, r_height / 2);         
-  last_anchor_point = new b2Vec2(0, -1 * r_height / 2);             
-  world.CreateJoint(revolute_joint);  
+  for (var i = 1; i <= 40; i++)     {        
+    var body = createBox(512, i * 3 * rHeight, 5, rHeight, b2Body.b2_dynamicBody);                         
+    revoluteJoint.bodyA = lastLink;        
+    revoluteJoint.bodyB = body;        
+    revoluteJoint.localAnchorA = lastAnchorPoint;        
+    revoluteJoint.localAnchorB = new b2Vec2(0, -1 * rHeight / scale);
+    lastAnchorPoint = new b2Vec2(0, rHeight / scale);    
+    world.CreateJoint(revoluteJoint);                         
+    lastLink = body;
+    this.p.push(body);
+  }
+
+  this.wall = createBox(this.w + 10, 0, 10, this.h, b2Body.b2_staticBody);
+  revoluteJoint.bodyA = lastLink;        
+  revoluteJoint.bodyB = this.wall;        
+  revoluteJoint.localAnchorA = lastAnchorPoint;        
+  revoluteJoint.localAnchorB = new b2Vec2(0, 451 / scale);   
+  world.CreateJoint(revoluteJoint);                        
+
 };
 
-var createBox = function(x, y, width, height, options) {
-  //default setting
-  options = $.extend(true, {
-    'density': 1.0,
-    'friction': 1.0,
-    'restitution': 0.5,
+var createBox = function(x, y, width, height, bodyType) {
 
-    'type': b2Body.b2_dynamicBody
-  }, options);
-
-  var body_def = new b2BodyDef();
-  var fix_def = new b2FixtureDef();
-
-  fix_def.density = options.density;
-  fix_def.friction = options.friction;
-  fix_def.restitution = options.restitution;
-
-  fix_def.shape = new b2PolygonShape();
-
-  fix_def.shape.SetAsBox(width / scale / 2, height / scale / 2);
-
-  body_def.position.Set(x, y);
-
-  body_def.type = options.type;
-  body_def.userData = options.user_data;
-
-  var b = world.CreateBody(body_def);
-  var f = b.CreateFixture(fix_def);
+  var fixDef = new b2FixtureDef;
+  fixDef.density = 2.0;
+  fixDef.friction = 0.9;
+  fixDef.restitution = 0.8;
+  var bodyDef = new b2BodyDef;
+  bodyDef.type = bodyType;
+  bodyDef.position.x = x / scale;
+  bodyDef.position.y = y / scale;
+  fixDef.shape = new b2PolygonShape;
+  fixDef.shape.SetAsBox(width / scale, height / scale);
+  var b = world.CreateBody(bodyDef);
+  var f = b.CreateFixture(fixDef);
 
   return b;
+
 };
 
 RopeInterface.prototype.update = function() {
 
-  // ctx.fillStyle = this.col;
-  // ctx.beginPath();
-  // ctx.moveTo(this.p[0].getPosition().x * scale, this.p[0].getPosition().y * scale);
-
-  // for (var i = 1; i < this.p.length; i++) {
-  //   ctx.lineTo(this.p[i].getPosition().x * scale, this.p[i].getPosition().y * scale);
-  // };
-
-  // ctx.closePath();
-  // ctx.fill();
+  // Draw Static Red Box
+  ctx.fillStyle = '#FF0014';
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(352, 0);
+  ctx.lineTo(352, 492);
+  ctx.lineTo(0, 492);
+  ctx.closePath();
+  ctx.fill();
+  // Draw the blue interface
+  ctx.fillStyle = '#091D7C';
+  ctx.beginPath();
+  ctx.moveTo(this.p[0].GetPosition().x * scale, this.p[0].GetPosition().y * scale);
+  for (var i = 1; i < this.p.length; i++) {
+    ctx.lineTo(this.p[i].GetPosition().x * scale, this.p[i].GetPosition().y * scale);
+  };
+  ctx.lineTo(this.w + 50, 0);
+  ctx.closePath();
+  ctx.fill();
 
 };
 

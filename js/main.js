@@ -22,11 +22,11 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
 
 var c, ctx,
-  activeWork = 6,
+  activeWork = 0,
   works = [],
   sMouseX,
-  sMouseY;
-var drawDebug = true;
+  sMouseY,
+  drawDebug = false;
 
 
 
@@ -40,8 +40,13 @@ var drawDebug = true;
 // Create individual worlds for each artwork
 var worlds = [];
 for (var i = 0; i < 7; i++) {
-  worlds.push(
-    new b2World(new b2Vec2(0, 20 / scale), true));
+  if (i == 0) {
+    worlds.push(
+      new b2World(new b2Vec2(-20 / scale, 20 / scale), true));
+  } else {
+    worlds.push(
+      new b2World(new b2Vec2(0, 20 / scale), true));
+  }
 };
 var world = worlds[0];
 
@@ -55,6 +60,9 @@ $(function() {
 
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
+
+  // Red Green Blue RopeInterface
+  buildRopeInterface();
 
   // Red Blue
   buildRedBlue();
@@ -76,7 +84,7 @@ $(function() {
       ));
   };
 
-  world = worlds[2];
+  world = worlds[3];
   var group = [];
   group.push(
     new Curve(
@@ -89,7 +97,7 @@ $(function() {
 
 
   // Triangles and Triangle Curves
-  world = worlds[3];
+  world = worlds[4];
   group = [];
   group.push(
     new SpringyTriangle(
@@ -103,7 +111,7 @@ $(function() {
       356, 356));
   works.push(group);
 
-  world = worlds[4];
+  world = worlds[5];
   group = [];
   group.push(
     new SpringyTriangle(
@@ -117,7 +125,7 @@ $(function() {
       355.3, h));
   works.push(group);
 
-  world = worlds[5];
+  world = worlds[6];
   group = [];
   group.push(
     new SpringyTriangle(
@@ -130,9 +138,6 @@ $(function() {
       '#DFDFDB',
       606, 434));
   works.push(group);
-
-  // Red Green Blue RopeInterface
-  buildRopeInterface();
 
   console.log(Box2D);
 
@@ -192,7 +197,7 @@ function update() {
   world.Step(1 / 60, 10, 10);
   world.ClearForces();
   // Clear canvas
-  ctx.clearRect(0, 0, 640, 640);
+  ctx.clearRect(0, 0, works[activeWork][0].w, works[activeWork][0].h);
   // Update triangles
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
     works[activeWork][i].update();
@@ -242,6 +247,7 @@ $('#next').click(function() {
   ctx.canvas.height = works[activeWork][0].h;
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
+  canvasPosition = getElementPosition(document.getElementById('canvas'));
 });
 
 $('#prev').click(function() {
@@ -253,6 +259,7 @@ $('#prev').click(function() {
   ctx.canvas.height = works[activeWork][0].h;
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
+  canvasPosition = getElementPosition(document.getElementById('canvas'));
 });
 
 
@@ -261,6 +268,8 @@ $('#prev').click(function() {
 // ***********************************************************
 var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
 var canvasPosition = getElementPosition(document.getElementById('canvas'));
+
+console.log(canvasPosition)
 
 document.addEventListener("mousedown", function(e) {
   isMouseDown = true;
@@ -290,8 +299,13 @@ function handleMouseMove(e) {
 function getBodyAtMouse() {
   mousePVec = new b2Vec2(mouseX, mouseY);
   var aabb = new b2AABB();
-  aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
-  aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
+  if (activeWork === 0) {
+    aabb.lowerBound.Set(mouseX - 5, mouseY - 5);
+    aabb.upperBound.Set(mouseX + 5, mouseY + 5);
+  } else {
+    aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
+    aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
+  }
 
   // Query the world for overlapping shapes.
   selectedBody = null;
@@ -347,7 +361,7 @@ function dist(x1, y1, x2, y2) {
 
 // Toggle debug mode
 $(window).keypress(function(e) {
-  if (e.keyCode === 100) {
+  if (e.keyCode === 63) {
     drawDebug = !drawDebug;
   }
 });
@@ -361,7 +375,7 @@ function buildShiftyPolygon() {
   var w = 424,
     h = 440;
 
-  world = worlds[1];
+  world = worlds[2];
 
   var nodes = [];
   var group = [];
@@ -397,7 +411,7 @@ function buildRedBlue() {
 
   var locs = [];
   var group = [];
-  world = worlds[0];
+  world = worlds[1];
 
   locs.push(
     new b2Vec2(66, 38));
@@ -435,30 +449,15 @@ function buildRedBlue() {
   works.push(group);
 }
 
-// blue #0196CE
-
-
 function buildRopeInterface() {
 
-  var locs = [];
   var group = [];
-  world = worlds[6];
-
-  locs.push(
-    new b2Vec2(66, 38));
-  locs.push(
-    new b2Vec2(66 + 508, 38));
-  locs.push(
-    new b2Vec2(66 + 508, 156 + 38));
-  locs.push(
-    new b2Vec2(66, 156 + 38));
-
+  world = worlds[0];
   group.push(
     new RopeInterface(
-      locs,
-      '#0196CE',
-      '#F0F0EE',
-      640, 640));
+      10,
+      '#00B735',
+      900, 560));
 
   works.push(group);
 }
