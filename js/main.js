@@ -2,7 +2,7 @@
 //  MAIN ANIMATION LOOP
 // ***********************************************************
 
-var scale = 30; 
+var scale = 30;
 
 // Simplify Box2d namespace
 var b2Vec2 = Box2D.Common.Math.b2Vec2,
@@ -16,16 +16,17 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
   b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
   b2DebugDraw = Box2D.Dynamics.b2DebugDraw,
-  b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef,
-  b2DistanceJointDef =  Box2D.Dynamics.Joints.b2DistanceJointDef,
-  b2PrismaticJointDef =  Box2D.Dynamics.Joints.b2PrismaticJointDef;
+  b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
+  b2DistanceJointDef = Box2D.Dynamics.Joints.b2DistanceJointDef,
+  b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef,
+  b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
 
-var c, ctx, 
-    activeWork = 0,
-    works = [],
-    sMouseX,
-    sMouseY;
-var drawDebug = false;
+var c, ctx,
+  activeWork = 6,
+  works = [],
+  sMouseX,
+  sMouseY;
+var drawDebug = true;
 
 
 
@@ -38,19 +39,19 @@ var drawDebug = false;
 // );
 // Create individual worlds for each artwork
 var worlds = [];
-for (var i = 0; i < 6; i++) {
+for (var i = 0; i < 7; i++) {
   worlds.push(
-    new b2World(new b2Vec2(0, 20/scale), true));
+    new b2World(new b2Vec2(0, 20 / scale), true));
 };
 var world = worlds[0];
- 
+
 window.setInterval(update, 1000 / 60);
 
 // ***********************************************************
 //  SETUP
 // ***********************************************************
 
-$(function () {
+$(function() {
 
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
@@ -62,75 +63,89 @@ $(function () {
   buildShiftyPolygon();
 
   var w = 640,
-      h = 480;
+    h = 480;
 
   // Orange Curve
   var curvePoints = [];
 
   for (var i = 0; i < 6; i++) {
     curvePoints.push(
-      new b2Vec2( 
-        w/2 - w/2 * Math.cos(Math.PI*i/5), 
-        h - 0.85*h * Math.sin(Math.PI*i/5)
+      new b2Vec2(
+        w / 2 - w / 2 * Math.cos(Math.PI * i / 5),
+        h - 0.85 * h * Math.sin(Math.PI * i / 5)
       ));
   };
 
   world = worlds[2];
-  works.push(
+  var group = [];
+  group.push(
     new Curve(
       curvePoints,
-      new b2Vec2( w/2, h ),
+      new b2Vec2(w / 2, h),
       '#F4513F',
       '#F5F8FE',
-      w, h ));
+      w, h));
+  works.push(group);
 
-  
+
   // Triangles and Triangle Curves
   world = worlds[3];
-  works.push( 
+  group = [];
+  group.push(
     new SpringyTriangle(
-      new b2Vec2( 0, 356 ),
-      new b2Vec2( 0, 0 ),
-      new b2Vec2( 356, 0 ),
+      new b2Vec2(0, 356),
+      new b2Vec2(0, 0),
+      new b2Vec2(356, 0),
       '#2D2A22',
-      new b2Vec2(50*scale, 50*scale),
+      new b2Vec2(50 * scale, 50 * scale),
       4,
       '#F7F3EB',
-      356, 356 ));
+      356, 356));
+  works.push(group);
 
   world = worlds[4];
-  works.push( 
+  group = [];
+  group.push(
     new SpringyTriangle(
-      new b2Vec2( 0, 0 ),
-      new b2Vec2( 355.3, 0 ),
-      new b2Vec2( 355.3, h ),
+      new b2Vec2(0, 0),
+      new b2Vec2(355.3, 0),
+      new b2Vec2(355.3, h),
       '#BB1523',
-      new b2Vec2(50*scale, 50*scale),
+      new b2Vec2(50 * scale, 50 * scale),
       0.85,
       '#ffffff',
-      355.3, h ));
+      355.3, h));
+  works.push(group);
 
   world = worlds[5];
-  works.push( 
+  group = [];
+  group.push(
     new SpringyTriangle(
-      new b2Vec2( 45, 434-45 ),
-      new b2Vec2( 45+265, 434-45 ),
-      new b2Vec2( 45+265, 434-336-45 ),
+      new b2Vec2(45, 434 - 45),
+      new b2Vec2(45 + 265, 434 - 45),
+      new b2Vec2(45 + 265, 434 - 336 - 45),
       '#222222',
-      new b2Vec2(150*scale, 150*scale),
+      new b2Vec2(150 * scale, 150 * scale),
       1,
       '#DFDFDB',
-      606, 434 ));
+      606, 434));
+  works.push(group);
+
+  // Red Green Blue RopeInterface
+  buildRopeInterface();
 
   console.log(Box2D);
 
+  // BG and Sizing comes from the first object in group
   // Apply BG color to canvas
-  $('#canvas').css({backgroundColor: works[activeWork].bg});
+  $('#canvas').css({
+    backgroundColor: works[activeWork][0].bg
+  });
   // Resize canvas
-  ctx.canvas.height = works[activeWork].h;
-  ctx.canvas.width = works[activeWork].w;
+  ctx.canvas.height = works[activeWork][0].h;
+  ctx.canvas.width = works[activeWork][0].w;
   // Set to world 1
-  world = worlds[0];
+  world = worlds[activeWork];
 
   //setup debug draw
   var debugDraw = new b2DebugDraw();
@@ -151,9 +166,9 @@ $(function () {
 // ***********************************************************
 function update() {
 
-  if(isMouseDown && (!mouseJoint)) {
+  if (isMouseDown && (!mouseJoint)) {
     var body = getBodyAtMouse();
-    if(body) {
+    if (body) {
       var md = new b2MouseJointDef();
       md.bodyA = world.GetGroundBody();
       md.bodyB = body;
@@ -162,11 +177,11 @@ function update() {
       md.maxForce = 300.0 * body.GetMass();
       mouseJoint = world.CreateJoint(md);
       body.SetAwake(true);
-     }
+    }
   }
 
-  if(mouseJoint) {
-    if(isMouseDown) {
+  if (mouseJoint) {
+    if (isMouseDown) {
       mouseJoint.SetTarget(new b2Vec2(mouseX, mouseY));
     } else {
       world.DestroyJoint(mouseJoint);
@@ -179,24 +194,38 @@ function update() {
   // Clear canvas
   ctx.clearRect(0, 0, 640, 640);
   // Update triangles
-  works[activeWork].update();
-  // Draw debug view 
-  if(drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork])) world.DrawDebugData();
+  for (var i = works[activeWork].length - 1; i >= 0; i--) {
+    works[activeWork][i].update();
+    // Draw debug view 
+    if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork][i])) world.DrawDebugData();
+  };
+  // works[activeWork].update();
+  // if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork])) world.DrawDebugData();
 
 }
 
-function impulse () {
-  works[activeWork].impulse();
+function impulse() {
+  for (var i = works[activeWork].length - 1; i >= 0; i--) {
+    works[activeWork][i].impulse();
+  };
+  // works[activeWork].impulse();
 }
 
-function moveImp () {
+function moveImp() {
   var deltaX = sMouseX - mouseX;
   // var deltaY = sMouseY - mouseY;
 
-  var pos = works[activeWork].a_imp.body.GetPosition();
-  works[activeWork].a_imp.body.SetPosition(
-    new b2Vec2( pos.x-deltaX / scale, 
-                pos.y-deltaY / scale ));
+  for (var i = works[activeWork].length - 1; i >= 0; i--) {
+    var pos = works[activeWork][i].a_imp.body.GetPosition();
+    works[activeWork][i].a_imp.body.SetPosition(
+      new b2Vec2(pos.x - deltaX / scale,
+        pos.y - deltaY / scale));
+  };
+
+  // var pos = works[activeWork].a_imp.body.GetPosition();
+  // works[activeWork].a_imp.body.SetPosition(
+  //   new b2Vec2(pos.x - deltaX / scale,
+  //     pos.y - deltaY / scale));
 }
 
 
@@ -204,21 +233,25 @@ function moveImp () {
 // ***********************************************************
 //  Navigation
 // ***********************************************************
-$( '#next' ).click(function() {
-  if(activeWork < works.length-1) activeWork++;
-  $('#canvas').css({backgroundColor: works[activeWork].bg});
+$('#next').click(function() {
+  if (activeWork < works.length - 1) activeWork++;
+  $('#canvas').css({
+    backgroundColor: works[activeWork][0].bg
+  });
   // Resize canvas
-  ctx.canvas.height = works[activeWork].h;
-  ctx.canvas.width = works[activeWork].w;
+  ctx.canvas.height = works[activeWork][0].h;
+  ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
 });
 
-$( '#prev' ).click(function() {
-  if(activeWork > 0) activeWork--;
-  $('#canvas').css({backgroundColor: works[activeWork].bg});
+$('#prev').click(function() {
+  if (activeWork > 0) activeWork--;
+  $('#canvas').css({
+    backgroundColor: works[activeWork][0].bg
+  });
   // Resize canvas
-  ctx.canvas.height = works[activeWork].h;
-  ctx.canvas.width = works[activeWork].w;
+  ctx.canvas.height = works[activeWork][0].h;
+  ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
 });
 
@@ -259,7 +292,7 @@ function getBodyAtMouse() {
   var aabb = new b2AABB();
   aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
   aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
-  
+
   // Query the world for overlapping shapes.
   selectedBody = null;
   world.QueryAABB(getBodyCB, aabb);
@@ -267,8 +300,8 @@ function getBodyAtMouse() {
 }
 
 function getBodyCB(fixture) {
-  if(fixture.GetBody().GetType() != b2Body.b2_staticBody) {
-    if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
+  if (fixture.GetBody().GetType() != b2Body.b2_staticBody) {
+    if (fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
       selectedBody = fixture.GetBody();
       return false;
     }
@@ -282,36 +315,39 @@ function getBodyCB(fixture) {
 // ***********************************************************         
 //http://js-tut.aardon.de/js-tut/tutorial/position.html
 function getElementPosition(element) {
-  var elem=element, 
-  tagname="",
-  x=0,
-  y=0;
+  var elem = element,
+    tagname = "",
+    x = 0,
+    y = 0;
 
-  while((typeof(elem) == "object") && (typeof(elem.tagName) != "undefined")) {
-  y += elem.offsetTop;
-  x += elem.offsetLeft;
-  tagname = elem.tagName.toUpperCase();
+  while ((typeof(elem) == "object") && (typeof(elem.tagName) != "undefined")) {
+    y += elem.offsetTop;
+    x += elem.offsetLeft;
+    tagname = elem.tagName.toUpperCase();
 
-  if(tagname == "BODY") elem=0;
+    if (tagname == "BODY") elem = 0;
 
-  if(typeof(elem) == "object") {
-    if(typeof(elem.offsetParent) == "object")
-      elem = elem.offsetParent;
+    if (typeof(elem) == "object") {
+      if (typeof(elem.offsetParent) == "object")
+        elem = elem.offsetParent;
     }
   }
 
-  return {x: x, y: y};
+  return {
+    x: x,
+    y: y
+  };
 }
 
 // Calculate distance between two points
-function dist (x1, y1, x2, y2) {
-  d = Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+function dist(x1, y1, x2, y2) {
+  d = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
   return d;
 }
 
 // Toggle debug mode
-$(window).keypress( function (e) {
-  if(e.keyCode === 100) {
+$(window).keypress(function(e) {
+  if (e.keyCode === 100) {
     drawDebug = !drawDebug;
   }
 });
@@ -320,64 +356,109 @@ $(window).keypress( function (e) {
 // ***********************************************************
 //  BUILD WORKS
 // ***********************************************************         
-function buildShiftyPolygon () {
+function buildShiftyPolygon() {
 
   var w = 424,
-      h = 440;
+    h = 440;
 
   world = worlds[1];
-  
+
   var nodes = [];
+  var group = [];
 
   nodes.push(
     new Node(
-      new b2Vec2(0,0),
-      [0,w],
-      true ));
+      new b2Vec2(0, 0), [0, w],
+      true));
   nodes.push(
     new Node(
-      new b2Vec2(w,0),
-      [0,h],
-      false ));
+      new b2Vec2(w, 0), [0, h],
+      false));
   nodes.push(
     new Node(
-      new b2Vec2(0.66*w,h),
-      [0, w],
-      true ));
+      new b2Vec2(0.66 * w, h), [0, w],
+      true));
   nodes.push(
     new Node(
-      new b2Vec2(0,0.484*h),
-      [0, h],
-      false ));
+      new b2Vec2(0, 0.484 * h), [0, h],
+      false));
 
-  works.push(
+  group.push(
     new Polygon(
       nodes,
       '#2E2C2D',
       '#F8F9FB',
-      424, 440 ));
+      424, 440));
+
+  works.push(group);
 }
 
-function buildRedBlue () {
+function buildRedBlue() {
 
   var locs = [];
+  var group = [];
   world = worlds[0];
 
   locs.push(
-    new b2Vec2( 66,38 ));
+    new b2Vec2(66, 38));
   locs.push(
-    new b2Vec2( 66+508,38 ));
+    new b2Vec2(66 + 508, 38));
   locs.push(
-    new b2Vec2( 66+508,156+38 ));
+    new b2Vec2(66 + 508, 156 + 38));
   locs.push(
-    new b2Vec2( 66,156+ 38));
+    new b2Vec2(66, 156 + 38));
 
-  works.push(
+  group.push(
     new JellyQuad(
       locs,
       '#F35452',
       '#F0F0EE',
-      640, 640 ));
+      640, 640, 10));
+
+  locs = [];
+  locs.push(
+    new b2Vec2(66, 156 + 38));
+  locs.push(
+    new b2Vec2(66 + 156, 156 + 38));
+  locs.push(
+    new b2Vec2(66 + 156, 156 + 38 + 508));
+  locs.push(
+    new b2Vec2(66, 156 + 38 + 508));
+
+  group.push(
+    new JellyQuad(
+      locs,
+      '#0196CE',
+      '#F0F0EE',
+      640, 640, -2));
+
+  works.push(group);
 }
 
 // blue #0196CE
+
+
+function buildRopeInterface() {
+
+  var locs = [];
+  var group = [];
+  world = worlds[6];
+
+  locs.push(
+    new b2Vec2(66, 38));
+  locs.push(
+    new b2Vec2(66 + 508, 38));
+  locs.push(
+    new b2Vec2(66 + 508, 156 + 38));
+  locs.push(
+    new b2Vec2(66, 156 + 38));
+
+  group.push(
+    new RopeInterface(
+      locs,
+      '#0196CE',
+      '#F0F0EE',
+      640, 640));
+
+  works.push(group);
+}
