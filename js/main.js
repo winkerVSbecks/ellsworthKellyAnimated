@@ -163,6 +163,8 @@ $(function() {
     worlds[i].SetDebugDraw(debugDraw);
   };
 
+  // centre canvas
+  centreCanvas();
 });
 
 
@@ -248,6 +250,7 @@ $('#next').click(function() {
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
   canvasPosition = getElementPosition(document.getElementById('canvas'));
+  centreCanvas();
 });
 
 $('#prev').click(function() {
@@ -260,6 +263,7 @@ $('#prev').click(function() {
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
   canvasPosition = getElementPosition(document.getElementById('canvas'));
+  centreCanvas();
 });
 
 
@@ -268,8 +272,6 @@ $('#prev').click(function() {
 // ***********************************************************
 var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
 var canvasPosition = getElementPosition(document.getElementById('canvas'));
-
-console.log(canvasPosition)
 
 document.addEventListener("mousedown", function(e) {
   isMouseDown = true;
@@ -365,6 +367,23 @@ $(window).keypress(function(e) {
     drawDebug = !drawDebug;
   }
 });
+
+$(window).resize(function(event) {
+  centreCanvas();
+});
+
+function centreCanvas() {
+  var windowH = $(window).height();
+  var top = windowH / 2 - works[activeWork][0].h / 2;
+
+  $('#canvas').css({
+    'marginTop': top + 'px'
+  });
+
+  $('.arrow').css({
+    'top': windowH / 2 - 50 + 'px'
+  });
+};
 
 
 // ***********************************************************

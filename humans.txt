@@ -3,13 +3,13 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Varun Vachhar -- Developer -- @winkerVSbecks
 
 # THANKS
 
-    <name>
+    Ellsworth Kelly – Assuming I didn't piss him off
 
 # TECHNOLOGY COLOPHON
 
     HTML5, CSS3
-    Normalize.css, jQuery, Modernizr
+    jQuery, Modernizr, Box2dWeb & Canvas

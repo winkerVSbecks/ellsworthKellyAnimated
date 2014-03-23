@@ -1,0 +1,35 @@
+/*@import url('base.css');*/
+/*@import url('skeleton.css');*/
+@import url('fontello.css');
+
+body {
+	text-align: center;
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+	          user-select: none;
+}
+
+#canvas {
+	position: relative;
+	margin: 0 auto;
+}
+
+.arrow {
+	position: absolute;
+	top: 300px;
+	height: 100px;
+	cursor: pointer;
+	color: #444;
+	font-size: 50px;
+	line-height: 100px;
+}
+
+#prev {
+	left: 0px;
+}
+#next {
+	right: 0px;
+}
