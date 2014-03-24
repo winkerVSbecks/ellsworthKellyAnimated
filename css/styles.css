@@ -1,11 +1,12 @@
 @import url('fontello.css');
-@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700|Vollkorn:400italic,400);
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,400italic,700,700italic|Vollkorn:400italic,400);
 
 body {
 	text-align: center;
 	font-family: 'Lato', Arial, sans-serif;
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: 100%;
 	-webkit-touch-callout: none;
 	  -webkit-user-select: none;
 	   -khtml-user-select: none;
@@ -18,7 +19,24 @@ h1 {
 	font-family: 'Vollkorn', Georgia, serif;
 	font-style: italic;
 	text-align: center;
+	margin-top: 0;
+	margin-bottom: 16px;
 }
+
+a {
+	text-decoration: none;
+	color: #444;
+	font-weight: 700;
+	font-style: italic;
+}
+a:hover,
+a:active {
+	text-decoration: none;
+	color: #444;
+	border-bottom: 1px solid #444;
+}
+
+.clear { clear:both; }
 
 #canvas {
 	position: relative;
@@ -42,14 +60,19 @@ h1 {
 	right: 0px;
 }
 
-#info {
-	position: absolute;
+#info,
+#close {
+	position: fixed;
 	top: 24px;
 	right: 24px;
 	text-align: right;
 	font-weight: 400;
 	cursor: pointer;
 	color: #ccc;
+}
+
+#close {
+	color: #444;
 }
 
 #overlay {
@@ -65,28 +88,36 @@ h1 {
 
 #modal {
   width: 900px;
-  height: 460px;
+  height: 606px;
   position: fixed;
   top: 50%; 
   left: 50%;
-  margin-top: -230px;
+  margin-top: -303px;
   margin-left: -450px;
   background-color: #fff;
   color: #444;
   padding: 48px;
-  text-align: left;
   z-index: 11;
   display: none;
   -webkit-box-sizing: border-box; 
      -moz-box-sizing: border-box; 
           box-sizing: border-box;
 }
+#modal p {
+	float: right;
+	width: 430px;
+	text-align: left;
+	margin-top: 0;
+	line-height: 1.5;
+	overflow: hidden;
+}
+#modal p:last-child {
+	margin-bottom: 0;
+}
 
-#modal #close {
-	position: absolute;
-	top: 24px;
-	right: 24px;
-	text-align: right;
-	font-weight: 400;
-	cursor: pointer;
+#modal img {
+	float: left;
+	margin-top: 40px;
+	margin-right: 24px;
+	width: 350px;
 }
