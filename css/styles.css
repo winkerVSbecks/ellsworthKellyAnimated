@@ -1,15 +1,23 @@
-/*@import url('base.css');*/
-/*@import url('skeleton.css');*/
 @import url('fontello.css');
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700|Vollkorn:400italic,400);
 
 body {
 	text-align: center;
+	font-family: 'Lato', Arial, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
 	-webkit-touch-callout: none;
 	  -webkit-user-select: none;
 	   -khtml-user-select: none;
 	     -moz-user-select: none;
 	      -ms-user-select: none;
 	          user-select: none;
+}
+
+h1 {
+	font-family: 'Vollkorn', Georgia, serif;
+	font-style: italic;
+	text-align: center;
 }
 
 #canvas {
@@ -32,4 +40,52 @@ body {
 }
 #next {
 	right: 0px;
+}
+
+#info {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	text-align: right;
+	font-weight: 400;
+	cursor: pointer;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  background-color: #fff;
+  display: none;
+}
+
+#modal {
+  width: 900px;
+  height: 460px;
+  position: fixed;
+  top: 50%; 
+  left: 50%;
+  margin-top: -230px;
+  margin-left: -450px;
+  background-color: #fff;
+  color: #444;
+  padding: 48px;
+  text-align: left;
+  z-index: 11;
+  display: none;
+  -webkit-box-sizing: border-box; 
+     -moz-box-sizing: border-box; 
+          box-sizing: border-box;
+}
+
+#modal #close {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	text-align: right;
+	font-weight: 400;
+	cursor: pointer;
 }

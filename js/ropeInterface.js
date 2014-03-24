@@ -16,7 +16,7 @@ var RopeInterface = function(rHeight, bg, w, h) {
   var revoluteJoint = new b2RevoluteJointDef;                          
 
   for (var i = 1; i <= 40; i++)     {        
-    var body = createBox(512, i * 3 * rHeight, 5, rHeight, b2Body.b2_dynamicBody);                         
+    var body = createBox(512, i * 3 * rHeight, 15, rHeight, b2Body.b2_dynamicBody);                         
     revoluteJoint.bodyA = lastLink;        
     revoluteJoint.bodyB = body;        
     revoluteJoint.localAnchorA = lastAnchorPoint;        
@@ -80,13 +80,5 @@ RopeInterface.prototype.update = function() {
 };
 
 RopeInterface.prototype.impulse = function() {
-
-  // var f = this.impMag;
-  // var appliedForce = new b2Vec2(-f * scale, f * scale);
-  // // apply impulse to top particle
-  // this.imp = this.p[1].getPosition();
-  // this.p[1].body.ApplyImpulse(appliedForce, this.imp);
-  // // apply impulse to bottom particle
-  // this.imp = this.p[2].getPosition();
-  // this.p[2].body.ApplyImpulse(appliedForce, this.imp);
+  // No impulse in this one
 };

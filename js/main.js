@@ -249,7 +249,6 @@ $('#next').click(function() {
   ctx.canvas.height = works[activeWork][0].h;
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
-  canvasPosition = getElementPosition(document.getElementById('canvas'));
   centreCanvas();
 });
 
@@ -262,7 +261,6 @@ $('#prev').click(function() {
   ctx.canvas.height = works[activeWork][0].h;
   ctx.canvas.width = works[activeWork][0].w;
   world = worlds[activeWork];
-  canvasPosition = getElementPosition(document.getElementById('canvas'));
   centreCanvas();
 });
 
@@ -308,7 +306,6 @@ function getBodyAtMouse() {
     aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
     aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
   }
-
   // Query the world for overlapping shapes.
   selectedBody = null;
   world.QueryAABB(getBodyCB, aabb);
@@ -383,8 +380,19 @@ function centreCanvas() {
   $('.arrow').css({
     'top': windowH / 2 - 50 + 'px'
   });
+
+  canvasPosition = getElementPosition(document.getElementById('canvas'));
 };
 
+// Show/Hide info Modal
+$('#info').click(function(event) {
+  $('#overlay').show();
+  $('#modal').show();
+});
+$('#overlay, #close').click(function(event) {
+  $('#overlay').hide();
+  $('#modal').hide();
+});
 
 // ***********************************************************
 //  BUILD WORKS
