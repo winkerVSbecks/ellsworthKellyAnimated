@@ -39,7 +39,7 @@ var c, ctx,
 // );
 // Create individual worlds for each artwork
 var worlds = [];
-for (var i = 0; i < 7; i++) {
+for (var i = 0; i < 6; i++) {
   if (i == 0) {
     worlds.push(
       new b2World(new b2Vec2(-20 / scale, 20 / scale), true));
@@ -125,19 +125,19 @@ $(function() {
       355.3, h));
   works.push(group);
 
-  world = worlds[6];
-  group = [];
-  group.push(
-    new SpringyTriangle(
-      new b2Vec2(45, 434 - 45),
-      new b2Vec2(45 + 265, 434 - 45),
-      new b2Vec2(45 + 265, 434 - 336 - 45),
-      '#222222',
-      new b2Vec2(150 * scale, 150 * scale),
-      1,
-      '#DFDFDB',
-      606, 434));
-  works.push(group);
+  // world = worlds[6];
+  // group = [];
+  // group.push(
+  //   new SpringyTriangle(
+  //     new b2Vec2(45, 434 - 45),
+  //     new b2Vec2(45 + 265, 434 - 45),
+  //     new b2Vec2(45 + 265, 434 - 336 - 45),
+  //     '#222222',
+  //     new b2Vec2(150 * scale, 150 * scale),
+  //     1,
+  //     '#DFDFDB',
+  //     606, 434));
+  // works.push(group);
 
   console.log(Box2D);
 

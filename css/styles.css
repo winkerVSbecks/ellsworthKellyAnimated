@@ -49,6 +49,7 @@ h1 {
 	text-align: right;
 	font-weight: 400;
 	cursor: pointer;
+	color: #ccc;
 }
 
 #overlay {
