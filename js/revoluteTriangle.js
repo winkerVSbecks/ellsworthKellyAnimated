@@ -1,27 +1,25 @@
-var RevoluteTriangle = function(nodes, rotCenter, omega, col, bg, w, h) {
+var RevoluteTriangle = function(nodes, rotCenter, direction, col, bg, w, h) {
   this.nodes = nodes;
   this.rotCenter = rotCenter;
-  this.omega = omega;
+  this.direction = direction;
   this.col = col;
   this.bg = bg;
   this.w = w;
   this.h = h;
-  this.alpha = 0;
-  // // Calculate the centroid
-  // var centX = (this.nodes[0].x + this.nodes[1].x + this.nodes[2].x) / 3;
-  // var centY = (this.nodes[0].y + this.nodes[1].y + this.nodes[2].y) / 3;
-  // this.centroid = new b2Vec2(centX, centY);
+  this.omega = 1;
 };
 
 RevoluteTriangle.prototype.update = function() {
-  // Update rotation
-  if (isMouseDown) this.alpha += this.omega;
-  ctx.save();
   ctx.fillStyle = this.col;
-  // Rotate the triangle
-  // ctx.translate(this.rotCenter.x, this.rotCenter.y);
-  // ctx.rotate(this.alpha * Math.PI / 180);
-  // ctx.translate(-this.rotCenter.x, -this.rotCenter.y);
+  // Update rotation
+  ctx.save();
+  if (isMouseDown) {
+    this.omega += 10;
+    this.alpha = this.direction * 8 * Math.sin(this.omega * Math.PI / 180);
+    ctx.translate(this.rotCenter.x, this.rotCenter.y);
+    ctx.rotate(this.alpha * Math.PI / 180);
+    ctx.translate(-this.rotCenter.x, -this.rotCenter.y);
+  }
   ctx.beginPath();
   ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
   // Draw the triangle
@@ -30,4 +28,5 @@ RevoluteTriangle.prototype.update = function() {
   };
   ctx.closePath();
   ctx.fill();
+  ctx.restore();
 };

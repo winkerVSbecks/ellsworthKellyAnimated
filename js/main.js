@@ -22,7 +22,7 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
 
 var c, ctx,
-  activeWork = 6,
+  activeWork = 0,
   works = [],
   sMouseX,
   sMouseY,
@@ -199,7 +199,9 @@ function update() {
 
 function impulse() {
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
-    works[activeWork][i].impulse();
+    if (!activeWork === 6) {
+      works[activeWork][i].impulse();
+    }
   };
 }
 
@@ -472,25 +474,34 @@ function buildRevoluteTriangles() {
     h = 218 * 2;
 
   locs.push(
+    new b2Vec2(132 * 2, (108 - 36.0216216216) * 2));
+  locs.push(
+    new b2Vec2(132 * 2, (108 + 36.0216216216) * 2));
+  locs.push(
+    new b2Vec2(230 * 2, 108 * 2));
+
+  group.push(
+    new RevoluteTriangle(
+      locs,
+      new b2Vec2(100 * 2, 108 * 2), -1,
+      '#1F211E',
+      '#F8EFE7',
+      w, h));
+
+  locs = [];
+
+  locs.push(
     new b2Vec2(45 * 2, 40 * 2));
   locs.push(
     new b2Vec2(45 * 2, 176 * 2));
   locs.push(
     new b2Vec2(230 * 2, 108 * 2));
 
-  // locs.push(
-  //   new b2Vec2(123.3334, -136));
-  // locs.push(
-  //   new b2Vec2(123.3334, 136));
-  // locs.push(
-  //   new b2Vec2(246.667, 0));
-
   group.push(
     new RevoluteTriangle(
       locs,
-      locs.push(
-        new b2Vec2(100 * 2, 40 * 2)),
-      10,
+      new b2Vec2(100 * 2, 108 * 2),
+      1,
       '#FFD243',
       '#F8EFE7',
       w, h));
