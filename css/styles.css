@@ -52,6 +52,9 @@ a:active {
 	font-size: 50px;
 	line-height: 100px;
 }
+.arrow.disabled {
+	color: #ccc;
+}
 
 #prev {
 	left: 0px;

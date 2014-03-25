@@ -154,6 +154,7 @@ $(function() {
   };
   // centre canvas
   centreCanvas();
+  updateNav();
 });
 
 
@@ -221,7 +222,12 @@ function moveImp() {
 //  Navigation
 // ***********************************************************
 $('#next').click(function() {
-  if (activeWork < works.length - 1) activeWork++;
+  if (activeWork < works.length - 1) {
+    activeWork++;
+    updateNav();
+  } else {
+    return;
+  }
   $('#canvas').css({
     backgroundColor: works[activeWork][0].bg
   });
@@ -233,7 +239,12 @@ $('#next').click(function() {
 });
 
 $('#prev').click(function() {
-  if (activeWork > 0) activeWork--;
+  if (activeWork > 0) {
+    activeWork--;
+    updateNav();
+  } else {
+    return;
+  }
   $('#canvas').css({
     backgroundColor: works[activeWork][0].bg
   });
@@ -362,6 +373,19 @@ function centreCanvas() {
   });
 
   canvasPosition = getElementPosition(document.getElementById('canvas'));
+};
+
+function updateNav() {
+  if (activeWork === 0) {
+    $('#prev').addClass('disabled');
+  } else {
+    $('#prev').removeClass('disabled');
+  }
+  if (activeWork === works.length - 1) {
+    $('#next').addClass('disabled');
+  } else {
+    $('#next').removeClass('disabled');
+  }
 };
 
 // Show/Hide info Modal
