@@ -22,24 +22,15 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef;
 
 var c, ctx,
-  activeWork = 0,
+  activeWork = 6,
   works = [],
   sMouseX,
   sMouseY,
   drawDebug = false;
 
-
-
 // Init the box2d world
-// var world = new b2World(
-//   //gravity
-//   new b2Vec2(0, 20/scale),
-//   //allow sleep   
-//   true                       
-// );
-// Create individual worlds for each artwork
 var worlds = [];
-for (var i = 0; i < 6; i++) {
+for (var i = 0; i < 7; i++) {
   if (i == 0) {
     worlds.push(
       new b2World(new b2Vec2(-20 / scale, 20 / scale), true));
@@ -55,9 +46,7 @@ window.setInterval(update, 1000 / 60);
 // ***********************************************************
 //  SETUP
 // ***********************************************************
-
 $(function() {
-
   c = document.getElementById('canvas');
   ctx = c.getContext("2d");
 
@@ -95,7 +84,6 @@ $(function() {
       w, h));
   works.push(group);
 
-
   // Triangles and Triangle Curves
   world = worlds[4];
   group = [];
@@ -125,6 +113,9 @@ $(function() {
       355.3, h));
   works.push(group);
 
+  // Revolute Triangles
+  buildRevoluteTriangles();
+
   // world = worlds[6];
   // group = [];
   // group.push(
@@ -151,7 +142,6 @@ $(function() {
   ctx.canvas.width = works[activeWork][0].w;
   // Set to world 1
   world = worlds[activeWork];
-
   //setup debug draw
   var debugDraw = new b2DebugDraw();
   debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
@@ -162,7 +152,6 @@ $(function() {
   for (var i = worlds.length - 1; i >= 0; i--) {
     worlds[i].SetDebugDraw(debugDraw);
   };
-
   // centre canvas
   centreCanvas();
 });
@@ -206,33 +195,22 @@ function update() {
     // Draw debug view 
     if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork][i])) world.DrawDebugData();
   };
-  // works[activeWork].update();
-  // if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork])) world.DrawDebugData();
-
 }
 
 function impulse() {
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
     works[activeWork][i].impulse();
   };
-  // works[activeWork].impulse();
 }
 
 function moveImp() {
   var deltaX = sMouseX - mouseX;
-  // var deltaY = sMouseY - mouseY;
-
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
     var pos = works[activeWork][i].a_imp.body.GetPosition();
     works[activeWork][i].a_imp.body.SetPosition(
       new b2Vec2(pos.x - deltaX / scale,
         pos.y - deltaY / scale));
   };
-
-  // var pos = works[activeWork].a_imp.body.GetPosition();
-  // works[activeWork].a_imp.body.SetPosition(
-  //   new b2Vec2(pos.x - deltaX / scale,
-  //     pos.y - deltaY / scale));
 }
 
 
@@ -398,7 +376,6 @@ $('#overlay, #close').click(function(event) {
 //  BUILD WORKS
 // ***********************************************************         
 function buildShiftyPolygon() {
-
   var w = 424,
     h = 440;
 
@@ -435,7 +412,6 @@ function buildShiftyPolygon() {
 }
 
 function buildRedBlue() {
-
   var locs = [];
   var group = [];
   world = worlds[1];
@@ -477,7 +453,6 @@ function buildRedBlue() {
 }
 
 function buildRopeInterface() {
-
   var group = [];
   world = worlds[0];
   group.push(
@@ -485,6 +460,40 @@ function buildRopeInterface() {
       10,
       '#00B735',
       900, 560));
+
+  works.push(group);
+}
+
+function buildRevoluteTriangles() {
+  var group = [],
+    locs = [],
+    world = worlds[6],
+    w = 256 * 2,
+    h = 218 * 2;
+
+  locs.push(
+    new b2Vec2(45 * 2, 40 * 2));
+  locs.push(
+    new b2Vec2(45 * 2, 176 * 2));
+  locs.push(
+    new b2Vec2(230 * 2, 108 * 2));
+
+  // locs.push(
+  //   new b2Vec2(123.3334, -136));
+  // locs.push(
+  //   new b2Vec2(123.3334, 136));
+  // locs.push(
+  //   new b2Vec2(246.667, 0));
+
+  group.push(
+    new RevoluteTriangle(
+      locs,
+      locs.push(
+        new b2Vec2(100 * 2, 40 * 2)),
+      10,
+      '#FFD243',
+      '#F8EFE7',
+      w, h));
 
   works.push(group);
 }
