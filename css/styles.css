@@ -41,6 +41,9 @@ a:active {
 #canvas {
 	position: relative;
 	margin: 0 auto;
+	-webkit-box-shadow: 0 0 6px #ccc;
+	   -moz-box-shadow: 0 0 6px #ccc;
+          box-shadow: 0 0 6px #ccc;
 }
 
 .arrow {

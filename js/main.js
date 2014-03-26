@@ -194,7 +194,8 @@ function update() {
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
     works[activeWork][i].update();
     // Draw debug view 
-    if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork][i])) world.DrawDebugData();
+    if (drawDebug && !Polygon.prototype.isPrototypeOf(works[activeWork][i]) && !RevoluteTriangle.prototype.isPrototypeOf(works[activeWork][i]))
+      world.DrawDebugData();
   };
 }
 
