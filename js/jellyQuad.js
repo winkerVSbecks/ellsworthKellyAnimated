@@ -124,7 +124,6 @@ JellyQuad.prototype.update = function() {
 };
 
 JellyQuad.prototype.impulse = function() {
-
   var f = this.impMag;
   var appliedForce = new b2Vec2(-f * scale, f * scale);
   // apply impulse to top particle

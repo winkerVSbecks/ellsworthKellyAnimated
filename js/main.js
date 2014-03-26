@@ -201,7 +201,7 @@ function update() {
 
 function impulse() {
   for (var i = works[activeWork].length - 1; i >= 0; i--) {
-    if (!activeWork === 6) {
+    if (!activeWork !== 6) {
       works[activeWork][i].impulse();
     }
   };
