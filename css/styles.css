@@ -1,0 +1,128 @@
+@import url('fontello.css');
+
+body {
+	text-align: center;
+	font-family: 'Lato', Arial, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: 100%;
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+	      -ms-user-select: none;
+	          user-select: none;
+}
+
+h1 {
+	font-family: 'Vollkorn', Georgia, serif;
+	font-style: italic;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 16px;
+}
+
+a {
+	text-decoration: none;
+	color: #444;
+	font-weight: 700;
+	font-style: italic;
+}
+a:hover,
+a:active {
+	text-decoration: none;
+	color: #444;
+	border-bottom: 1px solid #444;
+}
+
+.clear { clear:both; }
+
+#canvas {
+	position: relative;
+	margin: 0 auto;
+	-webkit-box-shadow: 0 0 6px #ccc;
+	   -moz-box-shadow: 0 0 6px #ccc;
+          box-shadow: 0 0 6px #ccc;
+}
+
+.arrow {
+	position: absolute;
+	top: 300px;
+	height: 100px;
+	cursor: pointer;
+	color: #444;
+	font-size: 50px;
+	line-height: 100px;
+}
+.arrow.disabled {
+	color: #ccc;
+}
+
+#prev {
+	left: 0px;
+}
+#next {
+	right: 0px;
+}
+
+#info,
+#close {
+	position: fixed;
+	top: 24px;
+	right: 24px;
+	text-align: right;
+	font-weight: 400;
+	cursor: pointer;
+	color: #ccc;
+}
+
+#close {
+	color: #444;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  background-color: #fff;
+  display: none;
+}
+
+#modal {
+  width: 900px;
+  height: 618px;
+  position: fixed;
+  top: 50%; 
+  left: 50%;
+  margin-top: -309px;
+  margin-left: -450px;
+  background-color: #fff;
+  color: #444;
+  padding: 48px;
+  z-index: 11;
+  display: none;
+  -webkit-box-sizing: border-box; 
+     -moz-box-sizing: border-box; 
+          box-sizing: border-box;
+}
+#modal p {
+	float: right;
+	width: 430px;
+	text-align: left;
+	margin-top: 0;
+	line-height: 1.5;
+	overflow: hidden;
+}
+#modal p:last-child {
+	margin-bottom: 0;
+}
+
+#modal img {
+	float: left;
+	margin-top: 45px;
+	margin-right: 24px;
+	width: 350px;
+}
